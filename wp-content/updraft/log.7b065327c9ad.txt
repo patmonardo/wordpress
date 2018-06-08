@@ -1,0 +1,72 @@
+0000.073 () Opened log file at time: Wed, 06 Jun 2018 16:02:37 +0000 on http://rpi1.local
+0000.074 () UpdraftPlus WordPress backup plugin (https://updraftplus.com): 1.14.11 WP: 4.9.6 PHP: 7.0.27-0+deb9u1 (apache2handler, Linux rpi1 4.14.34-v7+ #1110 SMP Mon Apr 16 15:18:51 BST 2018 armv7l) MySQL: 5.5.5 WPLANG: en_US Server: Apache/2.4.25 (Raspbian) safe_mode: 0 max_execution_time: 900 memory_limit: 256M (used: 2.6M | 4M) multisite: N openssl: OpenSSL 1.1.0f  25 May 2017 mcrypt: N LANG: C ZipArchive::addFile: N
+0000.074 () Free space on disk containing Updraft's temporary directory: 7685.3 MB
+0000.094 () Restore job started. Entities to restore: plugins, themes, uploads, others, db. Restore options: {"updraft_encryptionphrase":"","updraft_restorer_wpcore_includewpconfig":false,"updraft_incremental_restore_point":-1}
+0000.224 () Will not delete any archives after unpacking them, because there was no cloud storage for this backup
+0000.442 () Entity: db
+0000.442 () restore_backup(backup_file=backup_2018-06-06-1601_Pat_d0084ecc8095-db.gz, type=db, info=a:0:{}, last_one=)
+0000.443 () Unpacking backup... (backup_2018-06-06-1601_Pat_d0084ecc8095-db.gz, 0.1 Mb)
+0000.444 () Database successfully unpacked
+0000.445 () Restoring the database (on a large site this can take a long time - if it times out (which can happen if your web hosting company has configured your hosting to limit resources) then you should use a different method, such as phpMyAdmin)...
+0000.445 () Using direct MySQL access; value of use_mysqli is: 1
+0001.099 () Tried to raise max_allowed_packet from 16 MB to 32 MB, but failed (Access denied; you need (at least one of) the SUPER privilege(s) for this operation, b:0;)
+0001.103 () Max packet size: 16 MB
+0001.104 () Entering maintenance mode
+0001.104 () Enabling Maintenance mode&#8230;
+0001.108 () Backup of: http://rpi1.local
+0001.126 () Content URL: http://rpi1.local/wp-content
+0001.127 () Uploads URL: http://rpi1.local/wp-content/uploads
+0001.127 () Old table prefix: wp_
+0001.128 () Site information: multisite=0
+0001.168 () New table prefix: wp_
+0001.302 () Processing table (InnoDB): wp_options
+0003.005 () Restoring prior UD configuration (table: wp_options; keys: 3)
+0003.733 () Processing table (InnoDB): wp_users
+0004.136 () Processing table (InnoDB): wp_usermeta
+0004.515 () Processing table (InnoDB): wp_commentmeta
+0005.093 () Processing table (InnoDB): wp_comments
+0005.524 () Processing table (InnoDB): wp_links
+0005.887 () Processing table (InnoDB): wp_postmeta
+0006.273 () Processing table (InnoDB): wp_posts
+0006.769 () Processing table (InnoDB): wp_term_relationships
+0007.063 () Processing table (InnoDB): wp_term_taxonomy
+0007.665 () Processing table (InnoDB): wp_termmeta
+0008.034 () Processing table (InnoDB): wp_terms
+0008.335 () Unlocking database and leaving maintenance mode
+0008.335 () Disabling Maintenance mode&#8230;
+0008.336 () Finished: lines processed: 41 in 7.86 seconds
+0008.338 () Cleaning up rubbish...
+0008.569 () Entity: plugins
+0008.569 () restore_backup(backup_file=backup_2018-06-06-1601_Pat_d0084ecc8095-plugins.zip, type=plugins, info=a:2:{s:4:"path";s:37:"/var/lib/wordpress/wp-content/plugins";s:11:"description";s:7:"Plugins";}, last_one=)
+0008.570 () Unpacking backup... (backup_2018-06-06-1601_Pat_d0084ecc8095-plugins.zip, 6.5 Mb)
+0009.623 () Moving old data: filesystem method / updraft_dir is potentially possible
+0009.623 () Moving old data: can potentially use wp_filesystem method / -old
+0009.623 () Moving old data out of the way...
+0010.024 () Top-level entities being moved: index.php, updraftplus, akismet
+0010.029 () Moving unpacked backup into place...
+0010.459 () Top-level entities being moved: index.php, updraftplus, akismet
+0010.463 () Cleaning up rubbish...
+0010.724 () Entity: themes
+0010.724 () restore_backup(backup_file=backup_2018-06-06-1601_Pat_d0084ecc8095-themes.zip, type=themes, info=a:2:{s:4:"path";s:36:"/var/lib/wordpress/wp-content/themes";s:11:"description";s:6:"Themes";}, last_one=)
+0010.725 () Unpacking backup... (backup_2018-06-06-1601_Pat_d0084ecc8095-themes.zip, 2.2 Mb)
+0010.816 () Moving old data: filesystem method / updraft_dir is potentially possible
+0010.817 () Moving old data: can potentially use wp_filesystem method / -old
+0010.817 () Moving old data out of the way...
+0010.859 () Top-level entities being moved: twentysixteen, twentyfifteen, twentyseventeen, index.php
+0010.870 () Moving unpacked backup into place...
+0010.916 () Top-level entities being moved: twentysixteen, twentyfifteen, twentyseventeen, index.php
+0010.918 () Cleaning up rubbish...
+0011.066 () Entity: uploads
+0011.067 () restore_backup(backup_file=backup_2018-06-06-1601_Pat_d0084ecc8095-uploads.zip, type=uploads, info=a:2:{s:4:"path";s:37:"/var/lib/wordpress/wp-content/uploads";s:11:"description";s:7:"Uploads";}, last_one=)
+0011.067 () Unpacking backup... (backup_2018-06-06-1601_Pat_d0084ecc8095-uploads.zip, 0 Mb)
+0011.070 () Moving old data: filesystem method / updraft_dir is potentially possible
+0011.071 () Moving old data: can potentially use wp_filesystem method / -old
+0011.071 () Moving old data out of the way...
+0011.072 () Moving unpacked backup into place...
+0011.074 () Cleaning up rubbish...
+0011.144 () Entity: others
+0011.145 () restore_backup(backup_file=backup_2018-06-06-1601_Pat_d0084ecc8095-others.zip, type=others, info=a:2:{s:4:"path";s:29:"/var/lib/wordpress/wp-content";s:11:"description";s:6:"Others";}, last_one=1)
+0011.145 () Unpacking backup... (backup_2018-06-06-1601_Pat_d0084ecc8095-others.zip, 0 Mb)
+0011.148 () Cleaning up rubbish...
+0011.386 () Restore successful!
+0011.386 () Restore successful

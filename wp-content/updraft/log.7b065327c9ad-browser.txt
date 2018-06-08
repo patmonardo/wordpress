@@ -1,0 +1,50 @@
+0000.213 (R) [notice] Looking for db archive: file name: backup_2018-06-06-1601_Pat_d0084ecc8095-db.gz
+0000.213 (R) [notice] Archive is expected to be size: 78.9 KB: OK
+0000.215 (R) [notice] Looking for plugins archive: file name: backup_2018-06-06-1601_Pat_d0084ecc8095-plugins.zip
+0000.215 (R) [notice] Archive is expected to be size: 6620.3 KB: OK
+0000.215 (R) [notice] Looking for themes archive: file name: backup_2018-06-06-1601_Pat_d0084ecc8095-themes.zip
+0000.215 (R) [notice] Archive is expected to be size: 2266.9 KB: OK
+0000.216 (R) [notice] Looking for uploads archive: file name: backup_2018-06-06-1601_Pat_d0084ecc8095-uploads.zip
+0000.216 (R) [notice] Archive is expected to be size: 0.3 KB: OK
+0000.216 (R) [notice] Looking for others archive: file name: backup_2018-06-06-1601_Pat_d0084ecc8095-others.zip
+0000.216 (R) [notice] Archive is expected to be size: 0.2 KB: OK
+0000.225 (R) [notice] Will not delete any archives after unpacking them, because there was no cloud storage for this backup
+0000.443 (R) [notice] Unpacking backup... (backup_2018-06-06-1601_Pat_d0084ecc8095-db.gz, 0.1 Mb)
+0000.445 (R) [notice] Restoring the database (on a large site this can take a long time - if it times out (which can happen if your web hosting company has configured your hosting to limit resources) then you should use a different method, such as phpMyAdmin)...
+0001.104 (R) [notice] Enabling Maintenance mode&#8230;
+0001.108 (R) [notice] Backup of: http://rpi1.local
+0001.126 (R) [notice] Content URL: http://rpi1.local/wp-content
+0001.127 (R) [notice] Uploads URL: http://rpi1.local/wp-content/uploads
+0001.127 (R) [notice] Old table prefix: wp_
+0001.128 (R) [notice] Site information: multisite = 0
+0001.174 (R) [notice] New table prefix: wp_
+0001.302 (R) [notice] Processing table (InnoDB):  wp_options
+0003.733 (R) [notice] Processing table (InnoDB):  wp_users
+0004.136 (R) [notice] Processing table (InnoDB):  wp_usermeta
+0004.515 (R) [notice] Processing table (InnoDB):  wp_commentmeta
+0005.093 (R) [notice] Processing table (InnoDB):  wp_comments
+0005.524 (R) [notice] Processing table (InnoDB):  wp_links
+0005.887 (R) [notice] Processing table (InnoDB):  wp_postmeta
+0006.273 (R) [notice] Processing table (InnoDB):  wp_posts
+0006.769 (R) [notice] Processing table (InnoDB):  wp_term_relationships
+0007.374 (R) [notice] Processing table (InnoDB):  wp_term_taxonomy
+0007.665 (R) [notice] Processing table (InnoDB):  wp_termmeta
+0008.035 (R) [notice] Processing table (InnoDB):  wp_terms
+0008.335 (R) [notice] Disabling Maintenance mode&#8230;
+0008.336 (R) [notice] Finished: lines processed: 41 in 7.86 seconds
+0008.338 (R) [notice] Cleaning up rubbish...
+0008.571 (R) [notice] Unpacking backup... (backup_2018-06-06-1601_Pat_d0084ecc8095-plugins.zip, 6.5 Mb)
+0009.623 (R) [notice] Moving old data out of the way...
+0010.029 (R) [notice] Moving unpacked backup into place...
+0010.463 (R) [notice] Cleaning up rubbish...
+0010.725 (R) [notice] Unpacking backup... (backup_2018-06-06-1601_Pat_d0084ecc8095-themes.zip, 2.2 Mb)
+0010.817 (R) [notice] Moving old data out of the way...
+0010.870 (R) [notice] Moving unpacked backup into place...
+0010.918 (R) [notice] Cleaning up rubbish...
+0011.067 (R) [notice] Unpacking backup... (backup_2018-06-06-1601_Pat_d0084ecc8095-uploads.zip, 0 Mb)
+0011.071 (R) [notice] Moving old data out of the way...
+0011.072 (R) [notice] Moving unpacked backup into place...
+0011.074 (R) [notice] Cleaning up rubbish...
+0011.145 (R) [notice] Unpacking backup... (backup_2018-06-06-1601_Pat_d0084ecc8095-others.zip, 0 Mb)
+0011.148 (R) [notice] Cleaning up rubbish...
+0011.386 (R) [notice] Restore successful!
