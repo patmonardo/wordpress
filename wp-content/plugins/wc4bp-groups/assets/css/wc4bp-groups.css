@@ -1,0 +1,49 @@
+button.button.wc4bp.add_groups {
+    margin-left: 5px;
+}
+
+.wc-metaboxes-wrapper#wc4bp_groups .expand-close {
+    float: right;
+    line-height: 28px;
+}
+
+#wc4bp_groups #message, #wc4bp_groups .notice {
+    margin: 10px;
+}
+
+.wc4bp_data_inner_content {
+    background-color: #fdfdfd;
+    padding: 1em;
+    border-top: 1px solid #eee;
+}
+
+.wc4bp-bottom-toolbar {
+    height: 26px;
+}
+
+.wc4bp-group-loading {
+    background: url(/wp-admin/images/spinner.gif) no-repeat;
+    -webkit-background-size: 20px 20px;
+    background-size: 20px 20px;
+    display: none;
+    vertical-align: middle;
+    opacity: 0.7;
+    filter: alpha(opacity=70);
+    width: 20px;
+    height: 20px;
+    margin: 4px 10px 0;
+}
+
+.wc4bp-group-error {
+    border: 1px solid #ff182e !important;
+}
+
+.wc4bp-group-radios{
+	list-style-type: none !important;
+}
+
+._bp_group_field{
+	clear: both;
+	margin-top: 1em;
+	margin-bottom: 1em;
+}
