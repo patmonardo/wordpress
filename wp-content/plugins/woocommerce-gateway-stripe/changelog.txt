@@ -1,5 +1,18 @@
 *** Changelog ***
 
+= 4.1.9 - 2018-08-27 =
+* Fix - Don't display admin notices to user that cannot manage woocommerce.
+* Fix - Fatal error when clicking on order link that doesn't exist.
+* Fix - When capturing a charge from authorize, Stripe fees not displaying.
+* Fix - Undefined property error on card type in rare cases.
+* Tweak - Update SEPA IBAN to use new elements implementation.
+* Add - Filter for Payment Request Button locale `wc_stripe_payment_request_button_locale`.
+
+= 4.1.8 - 2018-07-19 =
+* Fix - 3DS payment sometimes will create additional transaction in Stripe.
+* Fix - WC 2.6 with SEPA saved payment causing error on checkout.
+* Update - EPS logo.
+
 = 4.1.7 - 2018-06-06 =
 * Fix - Asynchronous payment methods such as SEPA, did not show order Stripe fees/net after payment succeed.
 * Fix - Missing semicolon on a CSS style value which causes display issues in some browsers.
