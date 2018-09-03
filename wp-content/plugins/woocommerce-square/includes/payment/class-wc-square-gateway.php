@@ -62,8 +62,8 @@ class WC_Square_Gateway extends WC_Payment_Gateway {
 		$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/mastercard.svg' ) . '" alt="Mastercard" width="32" style="margin-left: 0.3em" />';
 		$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/amex.svg' ) . '" alt="Amex" width="32" style="margin-left: 0.3em" />';
 
-		// Do not show Discover/Diners for Japan since it's not available
-		if ( 'JP' !== WC()->countries->get_base_country() ) {
+		// Do not show Discover/Diners for Japan and UK since it's not available
+		if ( 'JP' !== WC()->countries->get_base_country() && 'GB' !== WC()->countries->get_base_country() ) {
 			$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/discover.svg' ) . '" alt="Discover" width="32" style="margin-left: 0.3em" />';
 			$icon .= '<img src="' . WC_HTTPS::force_https_url( WC()->plugin_url() . '/assets/images/icons/credit-cards/diners.svg' ) . '" alt="Diners" width="32" style="margin-left: 0.3em" />';
 		}

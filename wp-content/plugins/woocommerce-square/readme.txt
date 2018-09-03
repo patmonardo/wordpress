@@ -4,7 +4,7 @@ Tags: credit card, square, woocommerce, inventory sync
 Requires at least: 4.4
 Tested up to: 4.9
 Requires PHP: 5.6
-Stable tag: 1.0.31
+Stable tag: 1.0.32
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -57,10 +57,8 @@ If you get stuck, you can ask for help in the Plugin Forum.
 
 == Changelog ==
 
-= 1.0.31 - 2018-06-05 =
-* Fix - SSL notice in admin shows even though SSL is provided.
-* Update - Send WC active prices to Square instead of tax exclusive.
-* Add - Hook `wc_square_sync_to_square_price` to filter prices sent to Square.
+= 1.0.32 - 2018-08-23 =
+* Fix - UK/GB localed does not support Diners/Discover, so do not show these brands on checkout.
 
 == Upgrade Notice ==
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: WooCommerce Square
- * Version: 1.0.31
+ * Version: 1.0.32
  * Plugin URI: https://woocommerce.com/products/square/
  * Description: Adds ability to sync inventory between WooCommerce and Square POS. In addition, you can also make purchases through the Square payment gateway.
  * Author: WooCommerce
@@ -23,7 +23,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 if ( ! class_exists( 'Woocommerce_Square' ) ) :
 
-	define( 'WC_SQUARE_VERSION', '1.0.31' );
+	define( 'WC_SQUARE_VERSION', '1.0.32' );
 
 	/**
 	 * Main class.
