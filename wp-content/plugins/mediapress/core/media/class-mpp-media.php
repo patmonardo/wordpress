@@ -24,8 +24,12 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @property string $component Associated component name( e.g members|groups etc )
  * @property int $component_id Associated component object id( e.g group id or user id )
  * @property int $cover_id The attachment/media id for the cover of this media(applies to non photo media)
- * @property boolean $is_orphan Is the media marked as orphan?
- * @property boolean $is_oembed Is the media Oembed
+ * @property bool $is_orphan Is the media marked as orphan?
+ * @property bool $is_oembed Is the media Oembed
+ * @property bool $is_remote Is the file stored at remote location. (have we used ftp|cdn for storing files?).
+ * @property bool $is_raw Is the file raw link.
+ * @property string $oembed_content Oembed content.
+ * @property string $source Source link(if any in case of remote media).
  */
 class MPP_Media {
 
@@ -162,13 +166,6 @@ class MPP_Media {
 	public $is_uploaded = 0;
 
 	/**
-	 * Is the file stored at remote location. (have we used ftp|cdn for storing files?)
-	 *
-	 * @var bool true if the file is not stored on local server
-	 */
-	public $is_remote = 0;
-
-	/**
 	 * Which remote Service Is being Used (id will dep[end on type of service, It uniquely identifies the remote)
 	 *
 	 * @var int
@@ -188,13 +185,6 @@ class MPP_Media {
 	 * @var int
 	 */
 	public $imported_url = 0;
-
-	/**
-	 * Is Embedded content
-	 *
-	 * @var int
-	 */
-	public $is_embedded = 0;
 
 	/**
 	 * In case of embedded content, from where it originates?

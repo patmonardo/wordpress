@@ -179,7 +179,6 @@ function mpp_get_media_slug( $media = null ) {
  * @param MPP_Media|int|null $media media id or Object.
  */
 function mpp_load_media_view( $media = null ) {
-
 	$view = mpp_get_media_view( $media );
 
 	if ( ! $view ) {
@@ -195,6 +194,10 @@ function mpp_load_media_view( $media = null ) {
  * @param MPP_Media|int|null $media media id or Object.
  */
 function mpp_media_content( $media = null ) {
+	if ( ! $media ) {
+		$media = mpp_get_media();
+	}
+
 	mpp_load_media_view( $media );
 }
 
@@ -218,6 +221,10 @@ function mpp_lightbox_content( $media ) {
 		"gallery/media/views/lightbox/{$type}.php", // grid-audio.php etc .
 		'gallery/media/views/lightbox/photo.php',
 	);
+
+	if ( $media->is_oembed ) {
+		array_unshift( $templates, 'gallery/media/views/lightbox/oembed.php' );
+	}
 
 	mpp_locate_template( $templates, true );
 }
@@ -763,33 +770,23 @@ function mpp_is_single_media() {
 	return false;
 }
 
+
 /**
- * Is given media remote?
- *
- * @param MPP_Media|int|null $media media id or Object.
+ * Check if the current action is media editing/management
  *
  * @return boolean
  */
-function mpp_is_remote_media( $media = null ) {
-
-	$media = mpp_get_media( $media );
-
-	return apply_filters( 'mpp_get_media_is_remote', $media->is_remote );
-
+function mpp_is_media_management() {
+	return mediapress()->is_editing( 'media' ) && mediapress()->is_action( 'edit' );
 }
 
 /**
- * Is it Oembed media?
- *
- * @param MPP_Media|int|null $media media id or Object.
+ * Is it media delete action?
  *
  * @return boolean
  */
-function mpp_is_oembed_media( $media = null ) {
-
-	$media = mpp_get_media( $media );
-
-	return apply_filters( 'mpp_is_oembed_media', $media->is_oembed );
+function mpp_is_media_delete() {
+	return mpp_is_media_management() && mediapress()->is_edit_action( 'delete' );
 }
 
 /**

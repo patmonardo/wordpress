@@ -74,7 +74,10 @@ class MPP_Core_Loader {
 			'core/gallery/mpp-gallery-activity.php',
 			'core/gallery/mpp-gallery-template.php',
 			// Media related.
+			'core/media/class-mpp-media-importer.php',
+			'core/media/class-remote-media-parser.php',
 			'core/media/mpp-media-functions.php',
+			'core/media/mpp-remote-media-functions.php',
 			'core/media/mpp-media-meta.php',
 			'core/media/class-mpp-media.php',
 			'core/media/mpp-media-template-tags.php',
@@ -153,6 +156,10 @@ class MPP_Core_Loader {
 
 		$files = array(
 			'core/ajax/mpp-ajax.php',
+			'core/ajax/class-mpp-ajax-remote-media-handler.php',
+			'core/ajax/class-mpp-ajax-activity-post-handler.php',
+			'core/ajax/class-mpp-ajax-gallery-action-handler.php',
+			'core/ajax/class-mpp-ajax-gallery-dir-loader.php',
 			'core/ajax/class-mpp-ajax-comment-helper.php',
 			'core/ajax/class-mpp-ajax-lightbox-helper.php',
 		);
@@ -163,6 +170,18 @@ class MPP_Core_Loader {
 			require_once $path . $file;
 		}
 
+		// initialize.
+		MPP_Ajax_Helper::get_instance();
+		MPP_Ajax_Remote_Media_Handler::boot();
+		MPP_Ajax_Activity_Post_Handler::boot();
+		// commenting.
+		MPP_Ajax_Comment_Helper::get_instance();
+
+		// Lightbox handler.
+		new MPP_Ajax_Lightbox_Helper();
+
+		MPP_Ajax_Gallery_Dir_Loader::boot();
+		MPP_Ajax_Gallery_Action_Handler::boot();
 	}
 
 
