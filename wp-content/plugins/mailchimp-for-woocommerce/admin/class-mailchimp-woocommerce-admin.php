@@ -226,14 +226,20 @@ class MailChimp_WooCommerce_Admin extends MailChimp_WooCommerce_Options {
 
             case 'logs':
 
-                if (isset($_POST['mc_action']) && in_array($_POST['mc_action'], array('view_log', 'remove_log'))) {
-                    wp_redirect('options-general.php?page=mailchimp-woocommerce&tab=logs');
-                    exit();
+                if (isset($_POST['log_file']) && !empty($_POST['log_file'])) {
+                    set_site_transient('mailchimp-woocommerce-view-log-file', $_POST['log_file'], 30);
                 }
-
+                
                 $data = array(
                     'mailchimp_logging' => isset($input['mailchimp_logging']) ? $input['mailchimp_logging'] : 'none',
                 );
+
+                if (isset($_POST['mc_action']) && in_array($_POST['mc_action'], array('view_log', 'remove_log'))) {
+                    $path = 'options-general.php?page=mailchimp-woocommerce&tab=logs';
+                    wp_redirect($path);
+                    exit();
+                }
+
                 break;
 		}
 
@@ -251,7 +257,7 @@ class MailChimp_WooCommerce_Admin extends MailChimp_WooCommerce_Options {
 	protected function validatePostApiKey($input)
 	{
 		$data = array(
-			'mailchimp_api_key' => isset($input['mailchimp_api_key']) ? $input['mailchimp_api_key'] : false,
+			'mailchimp_api_key' => isset($input['mailchimp_api_key']) ? trim($input['mailchimp_api_key']) : false,
 			'mailchimp_debugging' => isset($input['mailchimp_debugging']) ? $input['mailchimp_debugging'] : false,
 			'mailchimp_account_info_id' => null,
 			'mailchimp_account_info_username' => null,
@@ -259,25 +265,21 @@ class MailChimp_WooCommerce_Admin extends MailChimp_WooCommerce_Options {
 
 		$api = new MailChimp_WooCommerce_MailChimpApi($data['mailchimp_api_key']);
 
-		$valid = true;
-
-		if (empty($data['mailchimp_api_key']) || !($profile = $api->ping(true))) {
-			unset($data['mailchimp_api_key']);
-			$valid = false;
-			if (!$profile) {
-			    add_settings_error('mailchimp_store_settings', '', 'API Key Invalid');
+		try {
+		    $profile = $api->ping(true, true);
+            // tell our reporting system whether or not we had a valid ping.
+            $this->setData('validation.api.ping', true);
+            $data['active_tab'] = 'store_info';
+            if (isset($profile) && is_array($profile) && array_key_exists('account_id', $profile)) {
+                $data['mailchimp_account_info_id'] = $profile['account_id'];
+                $data['mailchimp_account_info_username'] = $profile['username'];
             }
-		}
-
-		// tell our reporting system whether or not we had a valid ping.
-		$this->setData('validation.api.ping', $valid);
-
-		$data['active_tab'] = $valid ? 'store_info' : 'api_key';
-
-		if ($valid && isset($profile) && is_array($profile) && array_key_exists('account_id', $profile)) {
-			$data['mailchimp_account_info_id'] = $profile['account_id'];
-			$data['mailchimp_account_info_username'] = $profile['username'];
-		}
+        } catch (Exception $e) {
+            unset($data['mailchimp_api_key']);
+            $data['active_tab'] = 'api_key';
+            add_settings_error('mailchimp_store_settings', $e->getCode(), $e->getMessage());
+            return $data;
+        }
 
 		return $data;
 	}

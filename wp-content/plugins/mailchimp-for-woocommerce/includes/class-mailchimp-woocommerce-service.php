@@ -10,8 +10,6 @@
  */
 class MailChimp_Service extends MailChimp_WooCommerce_Options
 {
-    protected static $pushed_orders = array();
-
     protected $user_email = null;
     protected $previous_email = null;
     protected $force_cart_post = false;
@@ -71,8 +69,8 @@ class MailChimp_Service extends MailChimp_WooCommerce_Options
     {
         if (!mailchimp_is_configured()) return;
 
-        // register this order is already in process..
-        static::$pushed_orders[$order_id] = true;
+        // tell the system the order was brand new - and we don't need to process the order update hook.
+        set_site_transient( "mailchimp_order_created_{$order_id}", true, 20);
 
         // see if we have a session id and a campaign id, also only do this when this user is not the admin.
         $campaign_id = $this->getCampaignTrackingID();
@@ -99,8 +97,11 @@ class MailChimp_Service extends MailChimp_WooCommerce_Options
     {
         if (!mailchimp_is_configured()) return;
 
-        // register this order is already in process..
-        static::$pushed_orders[$order_id] = true;
+        // if we got a new order hook first - just skip this for now during the 20 second window.
+        if (get_site_transient("mailchimp_order_created_{$order_id}") === true) {
+            return;
+        }
+
         // queue up the single order to be processed.
         $handler = new MailChimp_WooCommerce_Single_Order($order_id, null, null, null);
         $handler->is_update = true;
@@ -146,20 +147,30 @@ class MailChimp_Service extends MailChimp_WooCommerce_Options
 
         if (($user_email = $this->getCurrentUserEmail())) {
 
+            // let's skip this right here - no need to go any further.
+            if (mailchimp_email_is_privacy_protected($user_email)) {
+                return !is_null($updated) ? $updated : false;
+            }
+
             $previous = $this->getPreviousEmailFromSession();
 
-            $uid = md5(trim(strtolower($user_email)));
+            $uid = mailchimp_hash_trim_lower($user_email);
+
+            $unique_sid = $this->getUniqueStoreID();
 
             // delete the previous records.
             if (!empty($previous) && $previous !== $user_email) {
 
-                if ($this->api()->deleteCartByID($this->getUniqueStoreID(), $previous_email = md5(trim(strtolower($previous))))) {
+                if ($this->api()->deleteCartByID($unique_sid, $previous_email = mailchimp_hash_trim_lower($previous))) {
                     mailchimp_log('ac.cart_swap', "Deleted cart [$previous] :: ID [$previous_email]");
                 }
 
                 // going to delete the cart because we are switching.
                 $this->deleteCart($previous_email);
             }
+
+            // delete the current cart record if there is one
+            $this->api()->deleteCartByID($unique_sid, $uid);
 
             if ($this->cart && !empty($this->cart)) {
 
