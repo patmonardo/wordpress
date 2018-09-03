@@ -36,6 +36,7 @@ class wc4bp_Manager
         try {
             self::$shop_label = __( 'Shop', 'wc4bp' );
             //Load resources
+            require_once 'wc4bp-activity-stream.php';
             require_once 'wc4bp-myaccount-content.php';
             require_once 'wc4bp-myaccount.php';
             require_once 'wc4bp-myaccount-private.php';
@@ -60,6 +61,7 @@ class wc4bp_Manager
                 $wc_path = WooCommerce::instance()->plugin_path();
                 include_once $wc_path . '/includes/class-wc-frontend-scripts.php';
                 WC_Frontend_Scripts::init();
+                new WC4BP_Activity_Stream();
                 new WC4BP_MyAccount_Content();
                 new wc4bp_Woocommerce();
                 new WC4BP_MyAccount();
@@ -252,6 +254,13 @@ class wc4bp_Manager
                 return (!is_admin() || defined( 'DOING_AJAX' )) && !defined( 'DOING_CRON' );
         }
         return false;
+    }
+    
+    public static function assets_path( $name, $extension = 'js' )
+    {
+        $base_path = ( $extension == 'js' ? WC4BP_JS : WC4BP_CSS );
+        $suffix = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min' );
+        return $base_path . $name . $suffix . '.' . $extension;
     }
 
 }

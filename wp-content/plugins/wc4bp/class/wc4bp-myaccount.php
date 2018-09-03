@@ -102,6 +102,34 @@ class WC4BP_MyAccount
         return null;
     }
     
+    public static function get_active_endpoints()
+    {
+        try {
+            $result = array();
+            $available = self::get_available_endpoints();
+            
+            if ( !empty($available) ) {
+                $result = wp_cache_get( 'wc4bp_get_active_endpoints', 'wc4bp' );
+                
+                if ( false === $result ) {
+                    $wc4bp_options = get_option( 'wc4bp_options' );
+                    foreach ( $available as $end_point_key => $end_point_value ) {
+                        if ( empty($wc4bp_options['wc4bp_endpoint_' . $end_point_key]) ) {
+                            $result[$end_point_key] = $end_point_value;
+                        }
+                    }
+                    wp_cache_add( 'wc4bp_get_active_endpoints', $result, 'wc4bp' );
+                }
+            
+            }
+            
+            return $result;
+        } catch ( Exception $exception ) {
+            WC4BP_Loader::get_exception_handler()->save_exception( $exception->getTrace() );
+            return array();
+        }
+    }
+    
     /**
      * @return array
      */
@@ -119,11 +147,11 @@ class WC4BP_MyAccount
                     'edit-account'    => get_option( 'woocommerce_myaccount_edit_account_endpoint', 'edit-account' ),
                 );
                 $end_points = array(
-                    'orders'          => __( 'Orders', 'woocommerce' ),
-                    'downloads'       => __( 'Downloads', 'woocommerce' ),
-                    'edit-address'    => __( 'Addresses', 'woocommerce' ),
-                    'payment-methods' => __( 'Payment methods', 'woocommerce' ),
-                    'edit-account'    => __( 'Account details', 'woocommerce' ),
+                    'orders'          => __( 'Orders', 'wc4bp' ),
+                    'downloads'       => __( 'Downloads', 'wc4bp' ),
+                    'edit-address'    => __( 'Addresses', 'wc4bp' ),
+                    'payment-methods' => __( 'Payment methods', 'wc4bp' ),
+                    'edit-account'    => __( 'Account details', 'wc4bp' ),
                 );
                 // Remove missing endpoints.
                 foreach ( $woo_endpoints as $endpoint_id => $endpoint ) {
@@ -134,6 +162,16 @@ class WC4BP_MyAccount
                 wp_cache_add( 'wc4bp_get_available_endpoints', $end_points, 'wc4bp' );
             }
             
+            /**
+             * WooCommerce Endpoint.
+             *
+             * Filter the list of endpoint emulated from WooCommerce.
+             *
+             * @param array $end_points {
+             *     @type string Key The tab identification.
+             *     @type string Value The tab Name (localized form WooCommerce).
+             * }
+             */
             return apply_filters( 'wc4bp_add_endpoint', $end_points );
         } catch ( Exception $exception ) {
             WC4BP_Loader::get_exception_handler()->save_exception( $exception->getTrace() );

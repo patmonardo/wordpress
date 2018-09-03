@@ -79,7 +79,7 @@ class WC4BP_Component extends BP_Component
     }
     
     /**
-     * Register acctivity actions
+     * Register activity actions
      *
      * @since     1.0.4
      */
@@ -91,6 +91,9 @@ class WC4BP_Component extends BP_Component
             }
             bp_activity_set_action( $this->id, 'new_shop_review', __( 'New review created', 'wc4bp' ) );
             bp_activity_set_action( $this->id, 'new_shop_purchase', __( 'New purchase made', 'wc4bp' ) );
+            /**
+             * New activity register
+             */
             do_action( 'wc4bp_register_activity_actions' );
         } catch ( Exception $exception ) {
             WC4BP_Loader::get_exception_handler()->save_exception( $exception->getTrace() );
@@ -102,7 +105,7 @@ class WC4BP_Component extends BP_Component
      *
      * @since     1.0
      *
-     * @param array      $globals
+     * @param array $globals
      *
      * @global    object $bp
      */
@@ -125,7 +128,8 @@ class WC4BP_Component extends BP_Component
         $shop_link,
         $slug,
         $title,
-        $screen_function = ''
+        $screen_function = '',
+        $position = 0
     )
     {
         $id = str_replace( '-', '_', $slug );
@@ -136,7 +140,7 @@ class WC4BP_Component extends BP_Component
             'parent_url'      => $shop_link,
             'parent_slug'     => $this->slug,
             'screen_function' => apply_filters( 'wc4bp_screen_function', $screen_function, $id ),
-            'position'        => 10,
+            'position'        => 10 + $position,
             'item_css_id'     => 'shop-' . $id,
             'user_has_access' => bp_is_my_profile(),
         );
@@ -147,24 +151,26 @@ class WC4BP_Component extends BP_Component
      *
      * @since    1.0
      *
-     * @param array     $main_nav
-     * @param array     $sub_nav
+     * @param array $main_nav
+     * @param array $sub_nav
      *
      * @global   object $bp
      */
     function setup_nav( $main_nav = array(), $sub_nav = array() )
     {
         try {
-            if ( !function_exists( 'bp_get_settings_slug' ) ) {
-                return;
-            }
             if ( !empty($this->wc4bp_options['tab_activity_disabled']) ) {
                 return;
             }
             $wc4bp_pages_options = array();
+            
             if ( !empty($this->wc4bp_pages_options) && is_string( $this->wc4bp_pages_options ) ) {
                 $wc4bp_pages_options = json_decode( $this->wc4bp_pages_options, true );
+                usort( $wc4bp_pages_options['selected_pages'], function ( $a, $b ) {
+                    return strcmp( $a['position'], $b['position'] );
+                } );
             }
+            
             $name = __( 'Shop', 'wc4bp' );
             $main_nav = array(
                 'name'                    => $name,
@@ -179,7 +185,7 @@ class WC4BP_Component extends BP_Component
             $sub_nav = $this->get_endpoints( $sub_nav, $shop_link );
             // Add shop settings sub page
             
-            if ( !isset( $this->wc4bp_options['disable_shop_settings_tab'] ) ) {
+            if ( !isset( $this->wc4bp_options['disable_shop_settings_tab'] ) && function_exists( 'bp_get_settings_slug' ) ) {
                 $name = __( 'Shop', 'wc4bp' );
                 $sub_nav[] = array(
                     'name'            => $name,
@@ -202,16 +208,30 @@ class WC4BP_Component extends BP_Component
                         $shop_link,
                         esc_html( $post->post_name ),
                         $attached_page['tab_name'],
-                        'wc4bp_screen_plugins'
+                        'wc4bp_screen_plugins',
+                        $position
                     );
                 }
             }
+            /**
+             * Filter the array of items to attach to the Shop.
+             *
+             * @param array $sub_nav {
+             *     The array of sub item in the tabs.
+             *     More details in /wc4bp-premium/class/core/wc4bp-component.php:131
+             * }
+             * @param string $shop_link The link to main tab, is like the base url.
+             * @param string Unique slug for the component, for use in query strings and URLs.
+             */
             $sub_nav = apply_filters(
                 'bp_shop_sub_nav',
                 $sub_nav,
                 $shop_link,
                 $this->slug
             );
+            /**
+             * The navigation of the plugin is ready for setup
+             */
             do_action( 'bp_shop_setup_nav' );
             parent::setup_nav( $main_nav, $sub_nav );
         } catch ( Exception $exception ) {
@@ -219,14 +239,21 @@ class WC4BP_Component extends BP_Component
         }
     }
     
-    public function get_admin_bar_item( $parent, $slug, $title )
+    public function get_admin_bar_item(
+        $parent,
+        $slug,
+        $title,
+        $nulled = '',
+        $position = 0
+    )
     {
         $id = str_replace( '-', '_', $slug );
         $result = array(
-            'parent' => 'my-account-' . $this->id,
-            'id'     => 'my-account-' . $this->id . '-' . $id,
-            'title'  => $title,
-            'href'   => trailingslashit( $parent . $slug ),
+            'parent'   => 'my-account-' . $this->id,
+            'id'       => 'my-account-' . $this->id . '-' . $id,
+            'title'    => $title,
+            'position' => $position,
+            'href'     => trailingslashit( $parent . $slug ),
         );
         return $result;
     }
@@ -234,7 +261,7 @@ class WC4BP_Component extends BP_Component
     /**
      * Set up the Toolbar
      *
-     * @param array       $wp_admin_nav
+     * @param array $wp_admin_nav
      *
      * @return bool|void
      * @global BuddyPress $bp The one true BuddyPress instance
@@ -247,16 +274,21 @@ class WC4BP_Component extends BP_Component
                 return;
             }
             $wc4bp_pages_options = array();
+            
             if ( !empty($this->wc4bp_pages_options) && is_string( $this->wc4bp_pages_options ) ) {
                 $wc4bp_pages_options = json_decode( $this->wc4bp_pages_options, true );
+                usort( $wc4bp_pages_options['selected_pages'], function ( $a, $b ) {
+                    return strcmp( $a['position'], $b['position'] );
+                } );
             }
+            
             $wp_admin_nav = array();
             
             if ( is_user_logged_in() ) {
                 $user_domain = bp_loggedin_user_domain();
-                $settings_link = trailingslashit( $user_domain . BP_SETTINGS_SLUG );
                 
-                if ( !isset( $this->wc4bp_options['disable_shop_settings_tab'] ) ) {
+                if ( !isset( $this->wc4bp_options['disable_shop_settings_tab'] ) && function_exists( 'bp_get_settings_slug' ) ) {
+                    $settings_link = trailingslashit( $user_domain . bp_get_settings_slug() );
                     $title = __( 'Shop', 'wc4bp' );
                     // Shop settings menu
                     $wp_admin_nav[] = array(
@@ -279,8 +311,14 @@ class WC4BP_Component extends BP_Component
                     'class' => 'menupop',
                 ),
                 );
-                $wp_admin_nav = $this->get_endpoints( $wp_admin_nav, $shop_link, false );
+                $endpoints_admin_nav = $this->get_endpoints( $wp_admin_nav, $shop_link, false );
+                uasort( $endpoints_admin_nav, array( $this, 'compare_tabs' ) );
+                $wp_admin_nav = array_merge( $wp_admin_nav, $endpoints_admin_nav );
+                
                 if ( isset( $wc4bp_pages_options['selected_pages'] ) && is_array( $wc4bp_pages_options['selected_pages'] ) ) {
+                    usort( $wc4bp_pages_options['selected_pages'], function ( $a, $b ) {
+                        return strcmp( $a['position'], $b['position'] );
+                    } );
                     foreach ( $wc4bp_pages_options['selected_pages'] as $key => $attached_page ) {
                         $wp_admin_nav[] = array(
                             'parent' => 'my-account-' . $this->id,
@@ -290,12 +328,27 @@ class WC4BP_Component extends BP_Component
                         );
                     }
                 }
+                
                 parent::setup_admin_bar( $wp_admin_nav );
             }
         
         } catch ( Exception $exception ) {
             WC4BP_Loader::get_exception_handler()->save_exception( $exception->getTrace() );
         }
+    }
+    
+    public function compare_tabs( $a, $b )
+    {
+        if ( !isset( $a['position'] ) ) {
+            return 0;
+        }
+        if ( !isset( $b['position'] ) ) {
+            return 0;
+        }
+        if ( $a['position'] == $b['position'] ) {
+            return 0;
+        }
+        return ( $a['position'] < $b['position'] ? -1 : 1 );
     }
     
     /**
@@ -315,6 +368,11 @@ class WC4BP_Component extends BP_Component
                 return $found_template;
             }
             $path = 'shop/member/plugin';
+            /**
+             * Filter the path to the directory of the templates.
+             *
+             * @param string The path to the templates directory.
+             */
             $this->template_directory = apply_filters( 'wc4bp_members_get_template_directory', constant( 'WC4BP_ABSPATH_TEMPLATE_PATH' ) );
             bp_register_template_stack( array( $this, 'wc4bp_members_get_template_directory' ), 14 );
             
@@ -335,7 +393,14 @@ class WC4BP_Component extends BP_Component
                 $path = $this->get_endpoint_path( $bp->current_action );
             }
             
-            add_action( 'bp_template_content', create_function( '', "bp_get_template_part( '" . $path . "' );" ) );
+            add_action( 'bp_template_content', function () use( $path ) {
+                bp_get_template_part( $path );
+            } );
+            /**
+             * Filter the founded template.
+             *
+             * @param string The template filename.
+             */
             return apply_filters( 'wc4bp_members_load_template_filter_founded', $found_template );
         } catch ( Exception $exception ) {
             WC4BP_Loader::get_exception_handler()->save_exception( $exception->getTrace() );
@@ -386,6 +451,12 @@ class WC4BP_Component extends BP_Component
                 $path = 'shop/member/plugin';
                 break;
         }
+        /**
+         * Filter the template path.
+         *
+         * @param string $path The path route used to match one tab.
+         * @param string The path to the template directory. Get more info in /wc4bp-premium/class/core/wc4bp-component.php:355
+         */
         return apply_filters( 'wc4bp_load_template_path', $path, $this->template_directory );
     }
     
@@ -419,12 +490,20 @@ class WC4BP_Component extends BP_Component
         foreach ( $endpoints as $key => $title ) {
             
             if ( array_key_exists( $key, $shop_endpoints ) ) {
+                
                 if ( !isset( $this->wc4bp_options['tab_' . $key . '_disabled'] ) ) {
+                    $position = ( isset( $this->wc4bp_options['position']['tab_' . $key . '_disabled'] ) ? $this->wc4bp_options['position']['tab_' . $key . '_disabled'] : 0 );
                     switch ( $key ) {
                         case 'checkout':
                             global  $woocommerce ;
                             if ( isset( $_GET['change_payment_method'] ) ) {
-                                $sub_nav[] = $this->{$item_function}( $parent, $key, $title );
+                                $sub_nav[] = $this->{$item_function}(
+                                    $parent,
+                                    $key,
+                                    $title,
+                                    '',
+                                    $position
+                                );
                             }
                             // Add the checkout nav item, if cart empty do not add.
                             /** @var WC_Session_Handler $wc_session_data */
@@ -433,7 +512,13 @@ class WC4BP_Component extends BP_Component
                             if ( !empty($wc_session_data) ) {
                                 $session_cart = $wc_session_data->get( 'cart' );
                                 if ( !is_admin() && !empty($session_cart) ) {
-                                    $sub_nav[] = $this->{$item_function}( $parent, $key, $title );
+                                    $sub_nav[] = $this->{$item_function}(
+                                        $parent,
+                                        $key,
+                                        $title,
+                                        '',
+                                        $position
+                                    );
                                 }
                             }
                             
@@ -441,14 +526,30 @@ class WC4BP_Component extends BP_Component
                         case 'cart':
                         case 'history':
                         case 'track':
-                            $sub_nav[] = $this->{$item_function}( $parent, $key, $title );
+                            $sub_nav[] = $this->{$item_function}(
+                                $parent,
+                                $key,
+                                $title,
+                                '',
+                                $position
+                            );
                             break;
                     }
                 }
+            
             } elseif ( array_key_exists( $key, $my_account_tabs ) ) {
+                
                 if ( empty($this->wc4bp_options['wc4bp_endpoint_' . $key]) ) {
-                    $sub_nav[] = $this->{$item_function}( $parent, $key, $title );
+                    $position = ( isset( $this->wc4bp_options['position']['wc4bp_endpoint_' . $key] ) ? $this->wc4bp_options['position']['wc4bp_endpoint_' . $key] : 0 );
+                    $sub_nav[] = $this->{$item_function}(
+                        $parent,
+                        $key,
+                        $title,
+                        '',
+                        $position
+                    );
                 }
+            
             }
         
         }

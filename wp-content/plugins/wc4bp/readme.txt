@@ -1,10 +1,10 @@
 === WooCommerce BuddyPress Integration ===
 
-Contributors: themekraft, svenl77, gfirem, garrett-eclipse, shabushabu, kishores,, freemius
+Contributors: themekraft, svenl77, gfirem, garrett-eclipse, shabushabu, kishores,
 Tags: WooCommerce, BuddyPress, Shop, eCommerce, social networking, social shopping, customer, customer relation, achievements, support, product, vendor, marketplace, groups, support groups, profile, my account, my-account
 Requires at least: 4.0
-Tested up to: 4.9.5
-Stable tag: 3.1.4
+Tested up to: 4.9.7
+Stable tag: 3.2.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,11 +102,57 @@ Head to the 'WC4BP Settings' menu item in your admin sidebar to adjust the setti
 3. Add Pages to Member Profiles
 4. Profile Cart
 5. Checkout
-6. Track my order
+6. Orders
 7. Profile Settings
-8. Profile Address Details
+8. Edit Billing Address Details
+9. Admin menu options
 
 == Changelog ==
+= 3.2.3 24 August 2018 =
+* Fixed the edit option for the integrated pages.
+
+= 3.2.2 8 August 2018 =
+* Fixed the page scripts to add/remove/edit integrated pages.
+
+= 3.2.1 2 August 2018 =
+* Adding a global option to disable the activity stream.
+* Fixed the integrated page order.
+* Avoid including Woo pages and BuddyPress pages in the Integrated page functionality.
+* Adding new functionality to sort the tabs.
+* Merging all tabs disable option in one section.
+
+= 3.2.0 5 Jul 2018 =
+* Fixing the get active endpoint function to work in the free version.
+* Remove the action `wc4bp_screen_notification_settings`
+* Fixing the loader for minified assets.
+* Fixing the base url slug for member.
+* Fixing the ability to show the tabs if the Activity Setting in BuddyPress is disabled.
+* Updating translation file.
+* Updated contributors.
+* Grammar Fix thanks to @garrett-eclipse.
+* Fixing the deprecated use of create_function, now use an anonymous function.
+* Fixing the setting space to be better integrated with BuddyPress. Now if the BuddyPress Activity Setting is not enabled it will not work.
+* Fixing the edit address inside BuddyPress profile to work with any language.
+* Fixing the activity stream when an Order is complete.
+* Fixing the Profile settings url to save the options related to the activity stream.
+
+= 3.1.7 24 Jun 2018 =
+* Adding new localization files.
+* Adding a helper for the AddOns, insert items in the tabs with certain order.
+
+= 3.1.6 24 Jun 2018 =
+* Fixing the option to disable the stream related to the shop purchases.
+* Adding a filter to disabled the stream activity as global.
+
+= 3.1.5 24 Jun 2018 =
+* Testing with the new version of WooCommerce.
+* Adding a new option to avoid WooCommerce override User Profile data.
+* Fixing the 404 in pay invoice link.
+* Fixing the Payment tab.
+* Adding new filter to avoid the redirecting of WC4BP.
+* Improving the code documentation.
+* Removing the restore error handler from debug class.
+
 = 3.1.4 14 May 2018 =
 * Fixing the filters to change the Shop label
 

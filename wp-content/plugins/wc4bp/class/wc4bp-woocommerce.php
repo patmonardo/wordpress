@@ -40,7 +40,32 @@ class wc4bp_Woocommerce
             }
         
         }
+        
+        if ( isset( $this->wc4bp_options['disable_woo_profile_override'] ) ) {
+            add_action( 'woocommerce_checkout_update_customer', array( $this, 'avoid_override_of_user_meta' ) );
+        }
+    }
     
+    /**
+     * Set existing values to the user profile before woocommerce save the customer new data from checkout
+     * @see wordpress/wp-content/plugins/woocommerce/includes/class-wc-checkout.php:924
+     *
+     * @param WC_Customer $customer
+     * @param array $data
+     */
+    public function avoid_override_of_user_meta( $customer, $data )
+    {
+        if ( !is_user_logged_in() || !wc4bp_Manager::is_request( 'frontend' ) ) {
+            return;
+        }
+        $user_id = $customer->get_id();
+        $user_first_name = get_user_meta( $user_id, 'first_name', true );
+        $user_last_name = get_user_meta( $user_id, 'last_name', true );
+        if ( empty($user_first_name) || empty($user_last_name) ) {
+            return;
+        }
+        $customer->set_first_name( $user_first_name );
+        $customer->set_last_name( $user_last_name );
     }
     
     /**
@@ -115,7 +140,9 @@ class wc4bp_Woocommerce
             $base_path = wc4bp_redirect::get_base_url();
             switch ( $endpoint ) {
                 case 'order-pay':
-                    $url = $base_path . 'checkout/' . $endpoint . '/' . $value;
+                    $checkout_page_id = wc_get_page_id( 'checkout' );
+                    $checkout_page = get_post( $checkout_page_id );
+                    $url = get_bloginfo( 'url' ) . '/' . $checkout_page->post_name . '/' . $endpoint . '/' . $value;
                     break;
                 case 'orders':
                     $url = $base_path . $endpoint . '/' . $value;
